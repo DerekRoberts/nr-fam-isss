@@ -6,6 +6,7 @@ import ca.bc.gov.nrs.fam.dto.UserLookupBceidUserDto;
 import ca.bc.gov.nrs.fam.dto.UserLookupIdirSearchResult;
 import ca.bc.gov.nrs.fam.dto.UserLookupIdirUserDto;
 import ca.bc.gov.nrs.fam.exception.FamHttpException;
+import ca.bc.gov.nrs.fam.integration.UserDirectory;
 import ca.bc.gov.nrs.fam.integration.UserLookupClient;
 import ca.bc.gov.nrs.fam.service.ApiInstanceEnvResolver;
 import ca.bc.gov.nrs.fam.security.AuthorizationService;
@@ -46,7 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class IdentityLookupController {
 
-  private final UserLookupClient userLookupClient;
+  private final UserDirectory userLookupClient;
 
   /*
       Which of the directory's three instances to ask. The environment comes from

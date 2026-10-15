@@ -167,6 +167,7 @@ usually do; so do `keycloak_issuer_uri`, `user_lookup_issuer_uri` and
 | `css_api_client_id` | in practice | CSS API account (CSS app -> My Teams -> CSS API Account) |
 | `css_api_client_secret` | in practice | As above |
 | `user_lookup_base_url` | in practice | Base URL of nr-user-lookup-api |
+| `user_lookup_provider` | optional | `api` (default): people searches go to nr-user-lookup-api. `css`: they go to the CSS API's own user search through the CSS API account instead, so none of the `user_lookup_*` values are needed. CSS finds IDIR people by name, email or GUID (not by login), Business BCeID by GUID only, and only once they have signed in to a CSS application in that environment. |
 | `fc_api_token_test` | in practice | Forest Client API key for the API's TEST instance, used by every non-PROD application. Needed in all three environments. See below. |
 | `fc_api_token_prod` | prod only | Forest Client API key for the API's PROD instance. A separate key, and deliberately unset outside prod. See below. |
 | `keycloak_sa_client_id` | optional | Keycloak admin client that provisions FAM's user-lookup service account. See below. |

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,9 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserLookupClient {
+@ConditionalOnProperty(name = "fam.integration.user-lookup.provider", havingValue = "api",
+    matchIfMissing = true)
+public class UserLookupClient implements UserDirectory {
 
   private static final String UPSTREAM = "user-lookup-api";
 

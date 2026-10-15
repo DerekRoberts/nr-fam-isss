@@ -5,6 +5,7 @@ import ca.bc.gov.nrs.fam.constants.UserType;
 import ca.bc.gov.nrs.fam.dto.UserLookupBceidUserDto;
 import ca.bc.gov.nrs.fam.exception.FamHttpException;
 import ca.bc.gov.nrs.fam.constants.DirectoryEnv;
+import ca.bc.gov.nrs.fam.integration.UserDirectory;
 import ca.bc.gov.nrs.fam.integration.UserLookupClient;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class TargetOrganizationGuard {
   private static final String REFUSED =
       "Operation requires business bceid users to be within the same organization";
 
-  private final UserLookupClient userLookupClient;
+  private final UserDirectory userLookupClient;
   private final AuthorizationService authorizationService;
 
   /**

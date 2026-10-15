@@ -276,6 +276,13 @@ fam:
     # setting only some of them is rejected at startup, because a half-configured
     # directory reads as "no results" rather than as a misconfiguration.
     user-lookup:
+      # Which directory answers people searches. "api" is nr-user-lookup-api
+      # through the instances below. "css" is the CSS API's own user search
+      # through the team API account: nothing extra to deploy or onboard, but
+      # IDIR people are found by name, email or GUID (never by login), Business
+      # BCeID by GUID only, and only once they have signed in to a CSS
+      # application in that environment. The instances below are ignored then.
+      provider: ${USER_LOOKUP_PROVIDER:api}
       dev:
         base-url: ${USER_LOOKUP_BASE_URL_DEV:}
         token-url: ${USER_LOOKUP_TOKEN_URL_DEV:}

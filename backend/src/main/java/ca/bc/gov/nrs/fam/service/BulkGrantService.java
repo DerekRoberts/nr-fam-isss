@@ -22,6 +22,7 @@ import ca.bc.gov.nrs.fam.dto.UserLookupBceidUserDto;
 import ca.bc.gov.nrs.fam.dto.UserLookupIdirUserDto;
 import ca.bc.gov.nrs.fam.exception.FamHttpException;
 import ca.bc.gov.nrs.fam.constants.DirectoryEnv;
+import ca.bc.gov.nrs.fam.integration.UserDirectory;
 import ca.bc.gov.nrs.fam.integration.UserLookupClient;
 import ca.bc.gov.nrs.fam.security.AuthorizationService;
 import ca.bc.gov.nrs.fam.security.Requester;
@@ -98,7 +99,7 @@ public class BulkGrantService {
   private static final String BOM = "\uFEFF";
 
   private final CssIntegrationService cssIntegrationService;
-  private final UserLookupClient userLookupClient;
+  private final UserDirectory userLookupClient;
   private final AuthorizationService authorizationService;
   private final ca.bc.gov.nrs.fam.security.TargetOrganizationGuard targetOrganizationGuard;
   private final ForestClientIntegrationService forestClientIntegrationService;
@@ -106,7 +107,7 @@ public class BulkGrantService {
 
   public BulkGrantService(
       CssIntegrationService cssIntegrationService,
-      UserLookupClient userLookupClient,
+      UserDirectory userLookupClient,
       AuthorizationService authorizationService,
       ca.bc.gov.nrs.fam.security.TargetOrganizationGuard targetOrganizationGuard,
       ForestClientIntegrationService forestClientIntegrationService,

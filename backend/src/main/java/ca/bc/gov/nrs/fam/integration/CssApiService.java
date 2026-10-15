@@ -401,6 +401,29 @@ public class CssApiService {
     }
   }
 
+  /**
+   * Lists one identity provider's users matching a query, for example
+   * {@code /dev/azure-idir/users?lastName=Smith}. CSS matches first name, last
+   * name and email by substring and the GUID exactly, and searches the users
+   * already present in that environment's Keycloak realm, not the directory
+   * behind it. {@code uriTemplate} carries a single {@code {env}} variable.
+   */
+  public List<CssUserDto> searchIdpUsers(
+      String environment, String uriTemplate, Map<String, String> query) {
+    log.debug("CssApiService.searchIdpUsers({}, {}, {})", environment, uriTemplate,
+        query.keySet());
+    ResponseEntity<byte[]> response = call(() -> apiClient.get()
+        .uri(uriBuilder -> {
+          uriBuilder.path(uriTemplate);
+          query.forEach(uriBuilder::queryParam);
+          return uriBuilder.build(environment);
+        })
+        .header("Authorization", "Bearer " + accessToken())
+        .retrieve()
+        .toEntity(byte[].class));
+    return readList(response, CssUserDto.class);
+  }
+
   // ---------------------------------------------------------------------------
   // Plumbing
   // ---------------------------------------------------------------------------
@@ -475,7 +498,11 @@ public class CssApiService {
         .header("Authorization", "Bearer " + accessToken())
         .retrieve()
         .toEntity(byte[].class));
+    return readList(response, type);
+  }
 
+  /** Unwraps the CSS {@code data} envelope into a typed list; absent or null reads as empty. */
+  private <T> List<T> readList(ResponseEntity<byte[]> response, Class<T> type) {
     throwIfError(response);
 
     byte[] body = response.getBody();

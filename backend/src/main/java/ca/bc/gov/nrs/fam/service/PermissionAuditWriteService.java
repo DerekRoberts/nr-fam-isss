@@ -9,6 +9,7 @@ import ca.bc.gov.nrs.fam.dto.CssUserRoleAssignmentResult;
 import ca.bc.gov.nrs.fam.dto.PrivilegeChangeTargetDto;
 import ca.bc.gov.nrs.fam.constants.UserType;
 import ca.bc.gov.nrs.fam.constants.DirectoryEnv;
+import ca.bc.gov.nrs.fam.integration.UserDirectory;
 import ca.bc.gov.nrs.fam.integration.UserLookupClient;
 import ca.bc.gov.nrs.fam.dto.PrivilegeChangePerformerDto;
 import ca.bc.gov.nrs.fam.dto.PrivilegeDetailsDto;
@@ -55,7 +56,7 @@ public class PermissionAuditWriteService {
   private final FamPrivilegeChangeAuditRepository auditRepository;
   private final EntityManager entityManager;
   private final ObjectMapper objectMapper;
-  private final UserLookupClient userLookupClient;
+  private final UserDirectory userLookupClient;
   private final ApiInstanceEnvResolver apiInstanceEnvResolver;
   private final CssNameSnapshot cssNameSnapshot;
 

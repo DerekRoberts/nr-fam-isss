@@ -5,6 +5,7 @@ import ca.bc.gov.nrs.fam.dto.CssRoleNaming;
 import ca.bc.gov.nrs.fam.dto.CssUserRoleRowDto;
 import ca.bc.gov.nrs.fam.dto.UserLookupIdirUserDto;
 import ca.bc.gov.nrs.fam.constants.DirectoryEnv;
+import ca.bc.gov.nrs.fam.integration.UserDirectory;
 import ca.bc.gov.nrs.fam.integration.UserLookupClient;
 import java.time.Duration;
 import java.time.Instant;
@@ -93,7 +94,7 @@ public class AssignmentRowEnrichmentService {
 
   private static final String IDIR_DOMAIN = "IDIR";
 
-  private final UserLookupClient userLookupClient;
+  private final UserDirectory userLookupClient;
 
   /**
    * Names already resolved, by directory and GUID.

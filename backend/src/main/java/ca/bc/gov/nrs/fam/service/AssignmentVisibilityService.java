@@ -7,6 +7,7 @@ import ca.bc.gov.nrs.fam.dto.CssUserRoleRowDto;
 import ca.bc.gov.nrs.fam.dto.UserLookupBceidUserDto;
 import ca.bc.gov.nrs.fam.exception.FamHttpException;
 import ca.bc.gov.nrs.fam.constants.DirectoryEnv;
+import ca.bc.gov.nrs.fam.integration.UserDirectory;
 import ca.bc.gov.nrs.fam.integration.UserLookupClient;
 import ca.bc.gov.nrs.fam.security.Requester;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class AssignmentVisibilityService {
 
   private static final String BCEID_DOMAIN = "BCEID";
 
-  private final UserLookupClient userLookupClient;
+  private final UserDirectory userLookupClient;
   private final AssignmentRowEnrichmentService enrichmentService;
 
   /**
