@@ -1,0 +1,119 @@
+# Dev-grade PostgreSQL for the FAM pilot namespace (ISSSDP-512). One replica, one PVC, no backups:
+# fine for a dev pilot, not for test or prod (those get a managed/on-prem database per nr-fam's docs).
+# Credentials come from the Secret ${NAME}-${ZONE}-database, which nr-fam's backend template also reads
+# (keys database-host/-port/-name/-user/-password), so one Secret serves both.
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: fam-postgres-dev
+parameters:
+  - name: NAME
+    value: nr-fam-isss
+  - name: ZONE
+    value: dev
+  - name: IMAGE
+    value: postgres:17-alpine
+  - name: STORAGE
+    value: 1Gi
+  - name: DATABASE_PASSWORD
+    generate: expression
+    from: "[a-zA-Z0-9]{32}"
+objects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ${NAME}-${ZONE}-database
+      labels:
+        app: ${NAME}-${ZONE}
+    stringData:
+      database-host: ${NAME}-${ZONE}-database
+      database-port: "5432"
+      database-name: fam
+      database-user: fam
+      database-password: ${DATABASE_PASSWORD}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: ${NAME}-${ZONE}-database
+      labels:
+        app: ${NAME}-${ZONE}
+    spec:
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests:
+          storage: ${STORAGE}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: ${NAME}-${ZONE}-database
+      labels:
+        app: ${NAME}-${ZONE}
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      selector:
+        matchLabels:
+          deployment: ${NAME}-${ZONE}-database
+      template:
+        metadata:
+          labels:
+            app: ${NAME}-${ZONE}
+            deployment: ${NAME}-${ZONE}-database
+        spec:
+          containers:
+            - name: database
+              image: ${IMAGE}
+              ports:
+                - containerPort: 5432
+              env:
+                - name: POSTGRES_DB
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-${ZONE}-database
+                      key: database-name
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-${ZONE}-database
+                      key: database-user
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-${ZONE}-database
+                      key: database-password
+                - name: PGDATA
+                  value: /var/lib/postgresql/data/pgdata
+              volumeMounts:
+                - name: data
+                  mountPath: /var/lib/postgresql/data
+              readinessProbe:
+                exec:
+                  command: ["pg_isready", "-U", "fam", "-d", "fam"]
+                initialDelaySeconds: 5
+                periodSeconds: 10
+              livenessProbe:
+                exec:
+                  command: ["pg_isready", "-U", "fam", "-d", "fam"]
+                initialDelaySeconds: 30
+                periodSeconds: 30
+              resources:
+                requests: { cpu: 50m, memory: 128Mi }
+                limits: { cpu: 500m, memory: 512Mi }
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: ${NAME}-${ZONE}-database
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${NAME}-${ZONE}-database
+      labels:
+        app: ${NAME}-${ZONE}
+    spec:
+      ports:
+        - name: postgresql
+          port: 5432
+          targetPort: 5432
+      selector:
+        deployment: ${NAME}-${ZONE}-database

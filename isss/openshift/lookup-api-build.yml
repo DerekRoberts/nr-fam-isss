@@ -1,0 +1,48 @@
+# In-cluster build of nr-user-lookup-api from the fork branch that carries PR 17 (trusted clients).
+# Output: ImageStreamTag nr-user-lookup-api-backend:isss in the current namespace.
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: nr-user-lookup-api-build
+parameters:
+  - name: GIT_URI
+    value: https://github.com/jamesgagan/nr-user-lookup-api.git
+  - name: GIT_REF
+    value: feature/trusted-clients
+  - name: IMAGE_STREAM
+    value: nr-user-lookup-api-backend
+  - name: TAG
+    value: isss
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: ${IMAGE_STREAM}
+      labels:
+        app: nr-user-lookup-api-isss-dev
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: ${IMAGE_STREAM}
+      labels:
+        app: nr-user-lookup-api-isss-dev
+    spec:
+      source:
+        type: Git
+        git:
+          uri: ${GIT_URI}
+          ref: ${GIT_REF}
+        contextDir: backend
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${IMAGE_STREAM}:${TAG}
+      resources:
+        requests: { cpu: 250m, memory: 1Gi }
+        limits: { cpu: "1", memory: 2Gi }
+      successfulBuildsHistoryLimit: 2
+      failedBuildsHistoryLimit: 2
