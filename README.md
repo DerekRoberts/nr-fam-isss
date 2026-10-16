@@ -1,3 +1,5 @@
+> **ISSS deployment of nr-fam.** This repository tracks [bcgov/nr-fam](https://github.com/bcgov/nr-fam) and exists so the NRIDS-Epsilon team can run FAM for ISSS applications: deployment configuration, GitHub environments and any patch carried only until upstream takes it. `main` mirrors upstream; ISSS-specific work lives on branches. Keep upstream's README below unchanged so merges stay clean.
+
 [![Merge](https://github.com/bcgov/nr-fam/actions/workflows/merge.yml/badge.svg)](https://github.com/bcgov/nr-fam/actions/workflows/merge.yml)
 [![Analysis](https://github.com/bcgov/nr-fam/actions/workflows/analysis.yml/badge.svg)](https://github.com/bcgov/nr-fam/actions/workflows/analysis.yml)
 
